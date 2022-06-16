@@ -4,9 +4,11 @@ import ks.catsndogs.db.entities.CatEntity;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
+import java.util.Optional;
+
 
 @Repository
 public interface CatsRepository extends CrudRepository<CatEntity, Long> {
 
-    CatEntity findTopByName(String name);
+    Optional<CatEntity> findTopByName(String name);
 }

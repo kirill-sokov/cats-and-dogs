@@ -10,7 +10,6 @@ import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityNotFoundException;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.StreamSupport;
 
 @Service
@@ -29,7 +28,7 @@ public class CatsService implements CRUDService<String, Cat, CatUpdate> {
     @Override
     @PreAuthorize("hasRole('catlover')")
     public void remove(String catName) {
-        CatEntity cat = Optional.ofNullable(catsRepository.findTopByName(catName))
+        CatEntity cat = catsRepository.findTopByName(catName)
                 .orElseThrow(EntityNotFoundException::new);
 
         catsRepository.delete(cat);
@@ -37,7 +36,7 @@ public class CatsService implements CRUDService<String, Cat, CatUpdate> {
 
     @Override
     public Cat get(String catName) {
-        return Optional.ofNullable(catsRepository.findTopByName(catName))
+        return catsRepository.findTopByName(catName)
                 .map(CatEntity::toModel)
                 .orElseThrow(EntityNotFoundException::new);
     }
@@ -52,7 +51,7 @@ public class CatsService implements CRUDService<String, Cat, CatUpdate> {
     @Override
     @PreAuthorize("hasRole('catlover')")
     public Cat update(String catName, CatUpdate catUpdate) {
-        CatEntity cat = Optional.ofNullable(catsRepository.findTopByName(catName))
+        CatEntity cat = catsRepository.findTopByName(catName)
                 .orElseThrow(EntityNotFoundException::new);
 
         if (catUpdate.getAge() != null) {

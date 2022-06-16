@@ -26,7 +26,7 @@ public class DogsService implements CRUDService<String, Dog, DogUpdate> {
 
     @Override
     public void remove(String name) {
-        DogEntity dogEntity = Optional.ofNullable(dogsRepository.findTopByName(name))
+        DogEntity dogEntity = dogsRepository.findTopByName(name)
                 .orElseThrow(EntityNotFoundException::new);
 
         dogsRepository.delete(dogEntity);
@@ -34,7 +34,7 @@ public class DogsService implements CRUDService<String, Dog, DogUpdate> {
 
     @Override
     public Dog get(String name) {
-        return Optional.ofNullable(dogsRepository.findTopByName(name))
+        return dogsRepository.findTopByName(name)
                 .map(DogEntity::toModel)
                 .orElseThrow(EntityNotFoundException::new);
     }
@@ -48,7 +48,7 @@ public class DogsService implements CRUDService<String, Dog, DogUpdate> {
 
     @Override
     public Dog update(String name, DogUpdate dogUpdate) {
-        DogEntity dogEntity = Optional.ofNullable(dogsRepository.findTopByName(name))
+        DogEntity dogEntity = dogsRepository.findTopByName(name)
                 .orElseThrow(EntityNotFoundException::new);
 
         if (dogUpdate.getAge() != null) {

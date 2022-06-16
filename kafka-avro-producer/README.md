@@ -1,0 +1,3 @@
+# Kafka avro consumer
+
+WIP
