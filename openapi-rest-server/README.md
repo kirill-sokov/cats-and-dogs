@@ -1,6 +1,6 @@
 # Server side openapi rest implementation
 
-This repo contains the server side implementation of a defined cats and dogs spec/
+This repo contains the server side implementation of a defined cats and dogs spec.
 
 ## Use cases
 

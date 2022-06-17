@@ -1,0 +1,13 @@
+{
+ "namespace": "ks.catsndogs.avro",
+ "type": "record",
+ "name": "PetAdvertised",
+ "fields": [
+     {"name": "name", "type": "string"},
+     {"name": "type", "type": {"name": "type", "type": "enum", "symbols": ["CAT", "DOG"]}},
+     {"name": "status", "type": {"name": "status", "type": "enum", "symbols": ["AWAITING_OWNER", "ADOPTED"]}},
+     {"name": "breed", "type": "string"},
+     {"name": "color", "type": "string"},
+     {"name": "age", "type": "int"}
+ ]
+}

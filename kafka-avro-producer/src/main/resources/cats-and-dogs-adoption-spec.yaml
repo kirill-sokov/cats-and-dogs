@@ -1,0 +1,439 @@
+openapi: 3.0.3
+info:
+  title: Cats and Dogs Adoption API
+  description: Internal API for adopting cats and dogs.
+  contact:
+    name: Kirill Sokov
+    url: https://github.com/kirill-sokov
+  version: "1.0.0"
+servers:
+  - url: "{protocol}://{server}:{port}"
+    description: Internal servers
+    variables:
+      protocol:
+        enum:
+          - "http"
+        default: "http"
+      server:
+        default: "localhost"
+      port:
+        enum:
+          - "8083"
+        default: "8083"
+tags:
+  - name: Dogs
+    description: "Dogs management"
+  - name: Cats
+    description: "Cats management"
+
+paths:
+  "/v1/cats":
+    get:
+      tags:
+        - Cats
+      summary: List cats
+      operationId: "listCats"
+      description: Get list of cats
+      responses:
+        "200":
+          $ref: "#/components/responses/CatsListResponse"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "500":
+          $ref: "#/components/responses/InternalServer"
+    post:
+      tags:
+        - Cats
+      summary: Create a cat
+      operationId: "createCat"
+      description: Create a cat
+      requestBody:
+        $ref: "#/components/requestBodies/CatRequestBody"
+      responses:
+        "201":
+          $ref: "#/components/responses/CatResponse"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "500":
+          $ref: "#/components/responses/InternalServer"
+  "/v1/cats/{catName}":
+    delete:
+      tags:
+        - Cats
+      summary: Adopt a cat
+      operationId: "adoptCat"
+      description: Adopt a cat
+      parameters:
+        - $ref: '#/components/parameters/catName'
+      responses:
+        "204":
+          description: No Content
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "500":
+          $ref: "#/components/responses/InternalServer"
+  "/v1/dogs":
+    get:
+      tags:
+        - Dogs
+      summary: List dogs
+      operationId: "listDogs"
+      description: Get list of dogs
+      responses:
+        "200":
+          $ref: "#/components/responses/DogsListResponse"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "500":
+          $ref: "#/components/responses/InternalServer"
+    post:
+      tags:
+        - Dogs
+      summary: Create a dog
+      operationId: "createDog"
+      description: Create a cat
+      requestBody:
+        $ref: "#/components/requestBodies/DogRequestBody"
+      responses:
+        "201":
+          $ref: "#/components/responses/DogResponse"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "500":
+          $ref: "#/components/responses/InternalServer"
+  "/v1/dogs/{dogName}":
+    delete:
+      tags:
+        - Dogs
+      summary: Adopt a dog
+      operationId: "adoptDog"
+      description: Adopt a dog
+      parameters:
+        - $ref: '#/components/parameters/dogName'
+      responses:
+        "204":
+          description: No Content
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "500":
+          $ref: "#/components/responses/InternalServer"
+
+components:
+  requestBodies:
+    CatRequestBody:
+      description: Request to create a cat
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/Cat"
+          examples:
+            "CatToCreate":
+              $ref: "#/components/examples/Cat"
+    DogRequestBody:
+      description: Request to create a dog
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/Dog"
+          examples:
+            "DogToCreate":
+              $ref: "#/components/examples/Dog"
+  responses:
+    CatsListResponse:
+      description: Cats list response
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/CatsList"
+          examples:
+            default:
+              $ref: "#/components/examples/CatsList"
+    DogsListResponse:
+      description: Dogs list response
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/DogsList"
+          examples:
+            default:
+              $ref: "#/components/examples/DogsList"
+    CatResponse:
+      description: Cat response
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/Cat"
+          examples:
+            "Cat":
+              $ref: "#/components/examples/Cat"
+    DogResponse:
+      description: Dog response
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/Dog"
+          examples:
+            "Cat":
+              $ref: "#/components/examples/Dog"
+    BadRequest:
+      description: BadRequest
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+          examples:
+            default:
+              $ref: '#/components/examples/ErrorConstraintViolation'
+    Unauthorized:
+      description: Unauthorized
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+          examples:
+            default:
+              $ref: '#/components/examples/ErrorUnauthorized'
+    Forbidden:
+      description: Forbidden
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+          examples:
+            default:
+              $ref: '#/components/examples/ErrorForbidden'
+    NotFound:
+      description: Not Found
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+          examples:
+            default:
+              $ref: '#/components/examples/ErrorNotFound'
+    InternalServer:
+      description: Internal Server Error
+      content:
+        application/problem+json:
+          schema:
+            $ref: "#/components/schemas/Problem"
+          examples:
+            default:
+              $ref: "#/components/examples/ErrorInternalServerError"
+  parameters:
+    catName:
+      name: catName
+      required: true
+      in: path
+      description: "The unique name that represents a cat"
+      schema:
+        type: string
+        pattern: "^[A-Z]{1,1}[a-z]{3,255}$"
+    dogName:
+      name: dogName
+      required: true
+      in: path
+      description: "The unique name that represents a dog"
+      schema:
+        type: string
+        pattern: "^[A-Z]{1,1}[a-z]{3,255}$"
+  schemas:
+    Dog:
+      type: object
+      description: Dog
+      required:
+        - name
+        - age
+      properties:
+        name:
+          type: string
+          description: "A unique name of the dog"
+          pattern: "^[A-Z]{1,1}[a-z]{3,255}$"
+          minLength: 3
+          maxLength: 255
+        color:
+          type: string
+          description: "Color of the animal"
+        breed:
+          type: string
+          description: "Breed of the animal"
+        age:
+          type: integer
+          format: int32
+          description: "Age of the animal"
+          minimum: 1
+    Cat:
+      type: object
+      description: Cat
+      required:
+        - name
+        - age
+      properties:
+        name:
+          type: string
+          description: "A unique name of the cat"
+          pattern: "^[A-Z]{1,1}[a-z]{3,255}$"
+          minLength: 3
+          maxLength: 255
+        color:
+          type: string
+          description: "Color of the animal"
+        breed:
+          type: string
+          description: "Breed of the animal"
+        age:
+          type: integer
+          format: int32
+          description: "Age of the animal"
+          minimum: 1
+    CatsList:
+      description: A list of cats
+      type: array
+      items:
+        $ref: "#/components/schemas/Cat"
+    DogsList:
+      description: A list of dogs
+      type: array
+      items:
+        $ref: "#/components/schemas/Dog"
+    Problem:
+      type: object
+      description: |-
+        <b>Problem Detail</b> as a way to carry machine-readable details of errors in a HTTP response to avoid the need to define new error response formats for HTTP APIs <a href="https://tools.ietf.org/html/rfc7807">RFC 7807</a>
+      properties:
+        type:
+          type: string
+          format: uri
+          description: |
+            An absolute URI that identifies the problem type. When dereferenced, it SHOULD provide human-readable documentation for the problem type (e.g., using HTML).
+          default: "about:blank"
+          example: "https://devportal.lily.ai/docs/error-handling#constraint-violation"
+        title:
+          type: string
+          description: |
+            A short, summary of the problem type. Written in english and readable for engineers
+          example: Service Unavailable
+        status:
+          type: integer
+          format: int32
+          description: |
+            The HTTP status code generated by the origin server for this occurrence of the problem.
+          minimum: 100
+          maximum: 600
+          exclusiveMaximum: true
+          example: 503
+        detail:
+          type: string
+          description: |
+            A human readable explanation specific to this occurrence of the problem.
+          example: Connection to database timed out
+        instance:
+          type: string
+          format: uri
+          description: |
+            An absolute URI that identifies the specific occurrence of the problem. It may or may not yield further information if dereferenced.
+  examples:
+    Cat:
+      description: Cat
+      value:
+        color: "grey"
+        age: 3
+        breed: "persian"
+        name: "Joe"
+    Dog:
+      description: Dog
+      value:
+        color: "ginger"
+        age: 3
+        breed: "bulldog"
+        name: "Stan"
+    DogsList:
+      description: A list of dogs
+      value:
+        - color: "ginger"
+          age: 3
+          breed: "bulldog"
+          name: "Stan"
+    CatToUpdate:
+      description: Cat to update
+      value:
+        age: 4
+    DogToUpdate:
+      description: Dog to update
+      value:
+        age: 4
+    CatsList:
+      description: A list of cats
+      value:
+        - color: "grey"
+          age: 3
+          breed: "persian"
+          name: "Joe"
+    ErrorConstraintViolation:
+      description: Constraint Violation
+      value:
+        type: "https://devportal.lily.ai/docs/error-handling#constraint-violation"
+        title: "Constraint Violation"
+        status: 400
+        detail: "The Server can not process this request until the client resolves the semantic errors described in the violations section."
+        violations:
+          - field: name
+            message: "must be shorter than 255 symbols"
+    ErrorUnauthorized:
+      description: Unauthorized
+      value:
+        type: "https://devportal.lily.ai/docs/error-handling#unauthorized"
+        title: "Unauthorized"
+        status: 401
+        detail: "This operation requires authentication."
+    ErrorForbidden:
+      description: Forbidden
+      value:
+        type: "https://devportal.lily.ai/docs/error-handling#forbidden"
+        title: "Forbidden"
+        status: 403
+        detail: "According to the access control policy the current user does not have permission to access this resource."
+    ErrorNotFound:
+      description: Not Found
+      value:
+        type: "https://devportal.lily.ai/docs/error-handling#resource-not-found"
+        title: "Resource Not Found"
+        status: 404
+        detail: "Resource not found."
+    ErrorInternalServerError:
+      description: Server Error
+      value:
+        type: "https://devportal.lily.ai/docs/error-handling#server-error"
+        title: "Server Error"
+        status: 500
+        detail: "An internal server error was encountered."
