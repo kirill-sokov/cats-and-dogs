@@ -18,8 +18,28 @@ Kafka [Avro message format](https://avro.apache.org/docs/current/) communication
 
 ## Running the sample
 
+### Prerequisites
+
+Setup a running kafka instance using Rancher Desktop or alike emulator
+
+1. Assuming you have helm installed, install a few charts for kafka and schema registry in your k8s:
+```bash
+helm repo add bitnami https://charts.bitnami.com/bitnami
+helm repo add confluentinc https://confluentinc.github.io/cp-helm-charts/
+
+helm install kafka bitnami/kafka --set externalAccess.enabled=true,externalAccess.service.type=NodePort,externalAccess.service.nodePorts[0]=31390,externalAccess.service.domain=localhost
+helm install --set cp-kafka-rest.enabled=false,cp-kafka-connect.enabled=false,cp-control-center.enabled=false,cp-ksql-server.enabled=false,cp-kafka.enabled=false,cp-zookeeper.enabled=false,cp-schema-registry.prometheus.jmx.enabled=false,cp-schema-registry.kafka.bootstrapServers=kafka:9092 schema confluentinc/cp-helm-charts
+```
+2. Wait for the pods to start up and then expose schema registry:
+```bash
+kubectl.exe port-forward svc/schema-cp-schema-registry 31000:8081
+```
+After that you can run the application itself and call the APi it provides.
+
+
 * You can use [Postman](https://www.postman.com/) to import
-  the [cats-and-dogs-adoption-spec.yaml](src/main/resources/cats-and-dogs-adoption-spec.yaml) or just `curl` following it closely to check
+  the [cats-and-dogs-adoption-spec.yaml](src/main/resources/cats-and-dogs-adoption-spec.yaml) or just `curl` following
+  it closely to check
   out how it works.
 * create a new pet and observe it is advertised properly by running the
   counterpart [consumer application](../kafka-avro-consumer)
